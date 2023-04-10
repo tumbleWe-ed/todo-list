@@ -1,4 +1,5 @@
 import './styles.css';
+import todoEditor from './functionality';
 
 const projectSidebarUl = document.querySelector('.sidebar-project-list');
 const projectCreatorBtn = document.querySelector('#project-creator-btn');
@@ -20,10 +21,14 @@ function projectDivCreator(projectTitle) {
     projectSidebarUl.append(projectDiv);
     projectDiv.textContent = projectTitle;
     arrOfProjectDivs.push(projectDiv);
-
-
 }
 
+function createATodo() {
+    let title;
+    let notes;
+    let div;
+    return{title,notes,div}
+}
 
 
 function todoListCreator(projectName,indexOfProject) {
@@ -33,13 +38,59 @@ function todoListCreator(projectName,indexOfProject) {
 
     todoCreatorBtn.addEventListener('click', () => {
 
+        const curTodoDiv = createATodo()
 
-        const todoDiv = document.createElement('div');
-        todoDiv.className = `${projectName}`
-        mainBody.append(todoDiv);
+        curTodoDiv.div = document.createElement('div');
+        curTodoDiv.div.className = `${projectName}`
+        curTodoDiv.div.innerHTML = `<dialog class="form-dialog">
+        <form method="dialog"class="form">
+            <input type="text" id="title" placeholder="title"><br>
+            <textarea id="notes" placeholder="Notes"></textarea><br>
+            <button id="submit-btn">Submit</button> <button class="cancel-btn" type="reset">Cancel</button>
+        </form>
+    </dialog>`
 
-        console.log(arrOfProjects)
-        arrOfProjects[indexOfProject].arrOfTodos.push(todoDiv)
+        mainBody.append(curTodoDiv.div);
+
+        const curDialog = document.querySelector('.form-dialog');
+        curDialog.showModal();
+        // submit btn todo
+        const submitBtn = document.querySelector('#submit-btn');
+
+        submitBtn.addEventListener('click',(event) => {
+            mainBody.append(curTodoDiv.div);
+
+            arrOfProjects[indexOfProject].arrOfTodos.push(curTodoDiv);
+            event.preventDefault();
+
+            todoEditor();
+
+            console.log(arrOfProjects);
+            curDialog.close();
+
+            // fixes duplication in arr of todos
+            arrOfProjects.forEach((e) => {
+                e.arrOfTodos = e.arrOfTodos.filter((value,index,self) => 
+                    index === self.findIndex((t) => (
+                        t.div === value.div
+                    ))
+                )
+            }) 
+        })
+
+        const cancelBtn = document.querySelector('.cancel-btn');
+        cancelBtn.addEventListener('click',() => {
+            curDialog.close();
+            curTodoDiv.div.remove();
+
+            console.log(arrOfProjects);
+        })
+        
+        
+        
+        
+
+        
     })
 }
 
@@ -48,7 +99,7 @@ function todoListCreator(projectName,indexOfProject) {
 
 projectCreatorBtn.addEventListener('click', () => {
     /** prompt("Enter your project's name") */
-    const projectName = prompt("Enter your project's name")
+    const projectName = prompt("Enter your project's name");
     projectDivCreator(projectName);
     window[projectName] = projectCreator();
     arrOfProjects.push(window[projectName])
