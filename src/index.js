@@ -93,8 +93,8 @@ function todoListCreator(projectName,indexOfProject) {
             
             const deletebutton = document.createElement('button');
             deletebutton.textContent = 'Delete';
-            deletebutton.id = 'todo-del-btn'
-            deletebutton.className= `todo-del-btn${i}`
+            deletebutton.classList.add(`delele-btn`)
+            deletebutton.id = `todo-del-btn${i}`
             curTodoDiv.div.append(deletebutton);
             curTodoDiv.deleteBtn = deletebutton;
             
@@ -187,26 +187,53 @@ projectCreatorBtn.addEventListener('click', () => {
         })
     })
 });
-function testFunc() {
-    if(testBool) {
-        const allDelBtns = document.querySelectorAll('#todo-del-btn');
-        allDelBtns.forEach((e) => {
-            e.addEventListener('click',() => {
-                if(arrOfProjects[curProjectIndex].arrOfTodos.length === 1) {
-                    i = 0;
-                }
-                const curObj = arrOfProjects[curProjectIndex].arrOfTodos[(e.className).slice(-1)];
-                const indexOfObj = (e.className).slice(-1);
+function testFunc(event) {
+    const element = event.target;
+    if(element.classList.contains("delele-btn")) {
+        
+        
+        const indexOfObj = element.id.slice(-1);
+        const curObj = arrOfProjects[curProjectIndex].arrOfTodos[indexOfObj];
+        curObj.div.remove()
+        arrOfProjects[curProjectIndex].arrOfTodos.splice(indexOfObj,1);
+        console.log(arrOfProjects[curProjectIndex].arrOfTodos.length);
+        if(arrOfProjects[curProjectIndex].arrOfTodos.length === 1) {
+            arrOfProjects[curProjectIndex].arrOfTodos[0].div.className = arrOfProjects[curProjectIndex].arrOfTodos[0].div.className.replace(/.$/,`0`);
+            arrOfProjects[curProjectIndex].arrOfTodos[0].deleteBtn.id = arrOfProjects[curProjectIndex].arrOfTodos[0].deleteBtn.id.replace(/.$/,`0`)
+        } else if (arrOfProjects[curProjectIndex].arrOfTodos.length === 0) {
+            i = 0;
+        } else {
+            for(let j = 0; j < arrOfProjects[curProjectIndex].arrOfTodos.length; j++) {
+                arrOfProjects[curProjectIndex].arrOfTodos[j].div.className = arrOfProjects[curProjectIndex].arrOfTodos[j].div.className.replace(/.$/,`${j}`);
+                arrOfProjects[curProjectIndex].arrOfTodos[j].deleteBtn.id = arrOfProjects[curProjectIndex].arrOfTodos[j].deleteBtn.id.replace(/.$/,`${j}`)
+                console.log(arrOfProjects[curProjectIndex].arrOfTodos[j])
+            }
+        }
+        
+        console.log(arrOfProjects)
+        
+        /* arrOfProjects[curProjectIndex].arrOfTodos.splice(indexOfObj,1);
+        arrOfProjects[curProjectIndex].arrOfTodos[indexOfObj].div.remove();* */
+        // arrOfProjects[curProjectIndex].arrOfTodos[im]
 
-                console.log(curObj)
-                console.log(indexOfObj)
-                console.log(arrOfProjects[curProjectIndex].arrOfTodos[indexOfObj])
-                arrOfProjects[curProjectIndex].arrOfTodos[indexOfObj].div.remove()
-                arrOfProjects[curProjectIndex].arrOfTodos.splice(indexOfObj,1);
-            })
-        })
+        /** const allDelBtns = document.querySelectorAll('#todo-del-btn');
+            allDelBtns.forEach((e) => {
+                e.addEventListener('click',() => {
+                    if(arrOfProjects[curProjectIndex].arrOfTodos.length === 1) {
+                        i = 0;
+                    }
+                    const curObj = arrOfProjects[curProjectIndex].arrOfTodos[(e.className).slice(-1)];
+                    const indexOfObj = (e.className).slice(-1);
 
-    
+                    console.log(curObj)
+                    console.log(indexOfObj)
+                    console.log(arrOfProjects[curProjectIndex].arrOfTodos[indexOfObj])
+                    arrOfProjects[curProjectIndex].arrOfTodos[indexOfObj].div.remove()
+                    arrOfProjects[curProjectIndex].arrOfTodos.splice(indexOfObj,1);
+                })
+            })* */
+
+    }
 
         /** const allTodos = document.querySelectorAll('.main-body div');
             allTodos.forEach((a) => {
@@ -236,9 +263,10 @@ function testFunc() {
                    delEvent.stopPropagation();
                     
                 })
-            })* */
-    }
+            })
+    /** if(arrOfProjectDivs.length !== 0) {
+        
+    }* */
 }
 
-
-setInterval(testFunc,1500)
+document.addEventListener( "click", testFunc );
