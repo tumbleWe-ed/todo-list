@@ -19,9 +19,15 @@ function projectCreator() {
 }
 
 function projectDivCreator(projectTitle) {
-    const projectDiv = document.createElement('li');
+    const projectDiv = document.createElement('div');
+    const projectLi = document.createElement('li');
+    const delBtn = document.createElement('button')
+
+    delBtn.textContent = "Delete";
+    delBtn.className = "project-del-btn";
+    projectDiv.append(projectLi,delBtn)
     projectSidebarUl.append(projectDiv);
-    projectDiv.textContent = projectTitle;
+    projectLi.textContent = projectTitle;
     projectDiv.className = "project-div";
     arrOfProjectDivs.push(projectDiv);
 }
@@ -127,7 +133,8 @@ projectCreatorBtn.addEventListener('click', () => {
             
         arrOfProjectDivs.forEach((e) => {
             e.addEventListener('click',(divEvent) => {
-                mainBody.innerHTML = `<h2>${e.textContent}</h2> <button class='todo-btn'>+</button>`;
+                const projectTitleText = e.textContent;
+                mainBody.innerHTML = `<h2>${projectTitleText.slice(0,-6)}</h2> <button class='todo-btn'>+</button>`;
 
                 
                 const indexOfProject = arrOfProjectDivs.indexOf(e);
@@ -139,7 +146,7 @@ projectCreatorBtn.addEventListener('click', () => {
 
                 curProjectIndex = indexOfProject;
 
-                
+                // divEvent.stopPropagation();
             })
         })
     }
@@ -147,6 +154,7 @@ projectCreatorBtn.addEventListener('click', () => {
 });
 function testFunc(event) {
     const element = event.target;
+    console.log(element)
     if(element.classList.contains("project-div")) {
         
         console.log(element)
@@ -158,7 +166,7 @@ function testFunc(event) {
         console.log("i = ",i);
     }
     
-    event.stopPropagation();
+    // event.stopPropagation();
     
     if(element.classList.contains("delele-btn")) {
         const indexOfObj = element.id.slice(-1);
@@ -181,7 +189,19 @@ function testFunc(event) {
         
         console.log(arrOfProjects)
         
-    }    
+    }
+
+    if(element.classList.contains('project-del-btn')) {
+        arrOfProjects.splice(curProjectIndex,1);
+        const curProjectDiv = element.parentElement;
+        const indexOfCurProjectDiv = arrOfProjectDivs.indexOf(curProjectDiv);
+        curProjectDiv.remove()
+        arrOfProjectDivs.splice(indexOfCurProjectDiv,1);
+        mainBody.innerHTML = ""
+        console.log(arrOfProjectDivs)
+        console.log(arrOfProjects)
+    }
+
 }
 
 document.addEventListener( "click", testFunc );
