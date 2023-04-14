@@ -13,8 +13,6 @@ const arrOfProjects = [];
 let curProjectIndex;
 let i = 0;
 
-let testBool = false;
-
 function projectCreator() {
     const arrOfTodos = [];
     return{arrOfTodos};
@@ -24,7 +22,7 @@ function projectDivCreator(projectTitle) {
     const projectDiv = document.createElement('li');
     projectSidebarUl.append(projectDiv);
     projectDiv.textContent = projectTitle;
-    projectDiv.className = "project-div"
+    projectDiv.className = "project-div";
     arrOfProjectDivs.push(projectDiv);
 }
 
@@ -99,38 +97,6 @@ function todoListCreator(projectName,indexOfProject) {
             curTodoDiv.div.append(deletebutton);
             curTodoDiv.deleteBtn = deletebutton;
             
-
-            testBool = true;
-            /** const allTodos = document.querySelectorAll('.main-body div');
-            allTodos.forEach((a) => {
-                /** a.addEventListener('click',(todoEvent) => {
-                    const curDivIndex = (a.className).slice(-1);
-                    const todo = arrOfProjects[indexOfProject].arrOfTodos[curDivIndex];
-                    const curDeleteBtn = arrOfProjects[indexOfProject].arrOfTodos[curDivIndex].deleteBtn
-                    console.log(curDeleteBtn)
-
-                    console.log('accessing div')
-                    todoEvent.stopPropagation()
-
-                    
-                })
-                const curDivIndex = (a.className).slice(-1);
-                const todo = arrOfProjects[indexOfProject].arrOfTodos[curDivIndex];
-                const curDeleteBtn = arrOfProjects[indexOfProject].arrOfTodos[curDivIndex].deleteBtn
-
-                curDeleteBtn.addEventListener('click',(delEvent) => {
-                        
-                    // console.log(arrOfProjects[indexOfProject].arrOfTodos[curDivIndex])
-                   todo.div.remove();
-
-                   arrOfProjects[indexOfProject].arrOfTodos.splice(curDivIndex,1);
-
-                    console.log(arrOfProjects)
-                   delEvent.stopPropagation();
-                    
-                })
-            })* */
-            
             
             i++;
             event.stopPropagation();
@@ -154,36 +120,30 @@ function todoListCreator(projectName,indexOfProject) {
 projectCreatorBtn.addEventListener('click', () => {
     /** prompt("Enter your project's name") */
     const projectName = prompt("Enter your project's name");
-    projectDivCreator(projectName);
-    window[projectName] = projectCreator();
-    arrOfProjects.push(window[projectName])
-        
-    arrOfProjectDivs.forEach((e) => {
-        e.addEventListener('click',(divEvent) => {
-            mainBody.innerHTML = `<h2>${e.textContent}</h2> <button class='todo-btn'>+</button>`;
-
+    if(projectName !== "" && projectName !== null) {
+        projectDivCreator(projectName);
+        window[projectName] = projectCreator();
+        arrOfProjects.push(window[projectName])
             
-            const indexOfProject = arrOfProjectDivs.indexOf(e);
-            todoListCreator(e.textContent,indexOfProject);
+        arrOfProjectDivs.forEach((e) => {
+            e.addEventListener('click',(divEvent) => {
+                mainBody.innerHTML = `<h2>${e.textContent}</h2> <button class='todo-btn'>+</button>`;
 
-            arrOfProjects[indexOfProject].arrOfTodos.forEach((a) => {
-                mainBody.append(a.div)
-            })
+                
+                const indexOfProject = arrOfProjectDivs.indexOf(e);
+                todoListCreator(e.textContent,indexOfProject);
 
-            curProjectIndex = indexOfProject;
-            // divEvent.stopPropagation()
-            /** console.log(testBool)
-            const allTodos = document.querySelectorAll('.main-body div');
-
-            allTodos.forEach((a) => {
-                a.addEventListener('click',(g) => {
-                    console.log(g)
+                arrOfProjects[indexOfProject].arrOfTodos.forEach((a) => {
+                    mainBody.append(a.div)
                 })
-            })* */
 
-            
+                curProjectIndex = indexOfProject;
+
+                
+            })
         })
-    })
+    }
+    
 });
 function testFunc(event) {
     const element = event.target;
